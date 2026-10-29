@@ -7,6 +7,12 @@ Core pieces:
 * :class:`ChatBot`          -- the LCEL chain + history-aware wrapper
 """
 
+import warnings
+
+# See the note in chatbot/cli.py: the deprecation is a design decision of this
+# project, documented in docs/REPORT.md, not a user-facing problem.
+warnings.filterwarnings("ignore", message=".*RunnableWithMessageHistory is deprecated.*")
+
 from .bot import ChatBot, build_default_bot
 from .config import Settings
 from .memory import ChatSession, SessionStore, SQLiteSessionStore, TokenWindow

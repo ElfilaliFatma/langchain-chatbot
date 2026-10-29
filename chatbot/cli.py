@@ -10,10 +10,17 @@ from __future__ import annotations
 
 import argparse
 import sys
+import warnings
 
 from .bot import build_default_bot
 from .memory import export_session
 from .prompts import PERSONAS
+
+# LangChain warns that RunnableWithMessageHistory is slated for replacement by
+# LangGraph persistence. The project deliberately targets the LangChain API
+# (the migration path is documented in docs/REPORT.md), so the warning is
+# suppressed here to keep demo output readable.
+warnings.filterwarnings("ignore", message=".*RunnableWithMessageHistory is deprecated.*")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -28,6 +35,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Windows consoles default to cp1252; model answers in Arabic or with emoji
+    # would raise UnicodeEncodeError on print without this.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
     args = parse_args(argv)
     bot = build_default_bot(persistent=not args.ephemeral, persona=args.persona)
 
