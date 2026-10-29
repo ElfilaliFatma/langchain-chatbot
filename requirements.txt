@@ -1,0 +1,8 @@
+langchain>=0.3,<0.4
+langchain-core>=0.3.85,<1.0
+langchain-ollama>=0.3,<0.4
+streamlit>=1.40
+python-dotenv>=1.0
+
+# Optional cloud provider
+langchain-openai>=0.3,<0.4
